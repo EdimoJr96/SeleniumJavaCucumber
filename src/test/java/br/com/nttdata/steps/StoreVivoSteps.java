@@ -1,16 +1,60 @@
 package br.com.nttdata.steps;
 
-import io.cucumber.java.PendingException;
+import br.com.nttdata.pages.PageCarrinho;
+import br.com.nttdata.pages.PageCelulares;
+import br.com.nttdata.pages.PageHome;
+import br.com.nttdata.pages.PageProdutos;
+import br.com.nttdata.support.DriverManager;
 import io.cucumber.java.pt.Dado;
-import net.bytebuddy.agent.builder.AgentBuilder;
+import io.cucumber.java.pt.E;
+import io.cucumber.java.pt.Então;
+import io.cucumber.java.pt.Quando;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class StoreVivoSteps {
 
-    String pageProduto = "";
+    String precoProduto = "";
 
     @Dado("que acesso o site {string}")
     public void queAcessoOSite(String url) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        PageHome home = new PageHome(DriverManager.getDriver());
+        home.acessarOSite();
+        home.aceitarTermosDeConsentimento();
+    }
+
+    @E("navego até a seção de Celulares")
+    public void navegoAteASecaoDeCelulares() {
+        new PageHome(DriverManager.getDriver()).clicarNoMenuCelulares();
+    }
+
+    @E("seleciono o segundo produto exibido")
+    public void selecionoOSegundoProdutoExibido() {
+        PageCelulares pageCelulares = new PageCelulares(DriverManager.getDriver());
+        pageCelulares.fecharPopUpSeVisivel();
+        pageCelulares.escolherOSegundoAparelho();
+    }
+
+    @E("verifico o preço do produto")
+    public void verificoOPrecoDoProduto() {
+        precoProduto = new PageProdutos(DriverManager.driver).retornarPrecoDoProduto();
+    }
+
+    @Quando("adiciono o produto ao carrinho")
+    public void adicionoOProdutoAoCarrinho() {
+        new PageProdutos(DriverManager.getDriver()).clicarEmColocarNoCarrinho();
+    }
+
+    @Então("o carrinho deve conter o item adicionado")
+    public void oCarrinhoDeveConterOItemAdicionado() {
+        boolean estaNoCarrinho = new PageCarrinho(DriverManager.getDriver()).verificaProdutoNoCarrinho();
+        assertTrue("O produto deve estar visível no carrinho", estaNoCarrinho);
+    }
+
+    @E("o total do carrinho deve ser igual ao valor do produto")
+    public void oTotalDoCarrinhoDeveSerIgualAoValorDoProduto() {
+        String valorTotal = new PageCarrinho(DriverManager.getDriver()).capturarValorTotalDoCarrinho();
+        assertEquals("O valor total do carrinho deve ser igual ao preço do produto", precoProduto, valorTotal);
     }
 }

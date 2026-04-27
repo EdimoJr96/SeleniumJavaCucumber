@@ -1,10 +1,15 @@
 package br.com.nttdata;
 
-import org.junit.runner.RunWith;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@Cucumberoptions
+@CucumberOptions(
+        features = "src/test/java/resources",
+        glue = {"br.com.nttdata.steps", "br.com.nttdata.hooks"},
+        plugin = {"pretty", "html:target/cucumber-reports.html"},
+        tags = "@CenarioCarrinho"
+)
 public class TestRunner {
-
 }
