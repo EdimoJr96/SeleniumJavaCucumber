@@ -6,20 +6,15 @@ import org.openqa.selenium.WebDriver;
 public class PageHome extends AttributsHome {
     private WebDriver driver;
 
-    public PageHome(WebDriver pdriver){
-        this.driver = pdriver;
+    public PageHome(WebDriver driver) {
+        this.driver = driver;
     }
 
-    public void acessarOSite(){
-        driver.get("https://store.vivo.com.br/");
-    }
-
-    public void aceitarTermosDeConsentimento(){
+    public void clickConsentButton() {
         driver.findElement(consentButton).click();
     }
 
-    public void clicarNoMenuCelulares(){
-        driver.findElement(menuCelulares).click();
+    public void selectMenu(String menu){
+        driver.findElement(menuCelulares(menu)).click();
     }
-
 }
